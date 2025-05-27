@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secretkey123'
 
 # Gemini client setup
-client = genai.Client(api_key="AIzaSyABHPfU3dSKY79OscpoyTOdKF4nQWuQoTg")
+client = genai.Client(api_key="")
 
 # Jinja2 environment for custom template-based prompts
 jinja_env = Environment(loader=FileSystemLoader("templates"))
