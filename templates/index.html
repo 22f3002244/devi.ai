@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gemini Chat</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <img src="{{ url_for('static', filename='logo2.jpg') }}" alt="Logo" class="logo">
+            <h2>DEVI AI</h2>
+        </div>
+        <div class="chat-box" id="chat-box">
+            {% if response %}
+                <div class="chat-message user">{{ request.form.get('user_input') }}</div>
+                <div class="chat-message bot">{{ response }}</div>
+            {% endif %}
+        </div>
+        <form method="POST" class="chat-form">
+            <textarea name="user_input" placeholder="Type your message..." required></textarea>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    
+</body>
+</html>

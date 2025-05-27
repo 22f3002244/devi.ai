@@ -1,0 +1,3 @@
+Respond like a smart assistant to this message:
+
+{{ text }}
