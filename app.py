@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from google import genai
 import re
 from datetime import datetime
@@ -6,9 +6,41 @@ import markdown
 from jinja2 import Environment, FileSystemLoader
 from dotenv import load_dotenv
 import os
+from routes import get_db_connection, routes
+
+def fetch_full_database():
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    # Step 1: Get all table names from public schema
+    cur.execute("""
+        SELECT table_name 
+        FROM information_schema.tables 
+        WHERE table_schema = 'public'
+    """)
+    tables = cur.fetchall()
+
+    full_data = {}
+
+    # Step 2: For each table, fetch all rows and column names
+    for table in tables:
+        table_name = table[0]
+        cur.execute(f'SELECT * FROM "{table_name}"')  # quotes preserve case sensitivity
+        rows = cur.fetchall()
+        colnames = [desc[0] for desc in cur.description]
+        full_data[table_name] = [dict(zip(colnames, row)) for row in rows]
+
+    cur.close()
+    conn.close()
+
+    return full_data
+
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secretkey123'
+
+app.register_blueprint(routes)
 
 load_dotenv()  # Load variables from .env file
 key = os.getenv("KEY")
@@ -26,13 +58,14 @@ def index():
     user_text = ""
 
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    data = fetch_full_database()
 
     if request.method == "POST":
         user_text = request.form.get("user_input")
 
         # Use Jinja2 to render prompt from template
         template = jinja_env.get_template("prompt_template.txt")
-        prompt = template.render(text=user_text, datetime=now)
+        prompt = template.render(text=user_text, datetime=now, data=data)
 
         # Send to Gemini
         response = client.models.generate_content(
