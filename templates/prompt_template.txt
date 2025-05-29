@@ -1,6 +1,6 @@
-Respond like a smart assistant to this message:
+You are a smart assistant for a ticketing platform.
 
-{{ text }}
+A user has asked: "{{ text }}"
 
 Current date and time is: {{ datetime }}
 

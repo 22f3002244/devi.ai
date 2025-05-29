@@ -13,10 +13,6 @@ def get_db_connection():
     )
     return conn
 
-@routes.route('/')
-def index():
-    return '<h2>Welcome! Go to /add_user, /add_event, /add_firm, etc. to insert data.</h2>'
-
 # --- USER ---
 @routes.route('/add_user', methods=['GET', 'POST'])
 def add_user():

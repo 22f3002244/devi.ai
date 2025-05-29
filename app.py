@@ -35,7 +35,15 @@ def fetch_full_database():
 
     return full_data
 
-
+def serialize_data(obj):
+    if isinstance(obj, dict):
+        return {k: serialize_data(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [serialize_data(v) for v in obj]
+    elif isinstance(obj, datetime):
+        return obj.isoformat()
+    else:
+        return obj
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secretkey123'
@@ -59,13 +67,14 @@ def index():
 
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     data = fetch_full_database()
+    data_serialized = serialize_data(data)
 
     if request.method == "POST":
         user_text = request.form.get("user_input")
 
         # Use Jinja2 to render prompt from template
         template = jinja_env.get_template("prompt_template.txt")
-        prompt = template.render(text=user_text, datetime=now, data=data)
+        prompt = template.render(text=user_text, datetime=now, data=data_serialized)
 
         # Send to Gemini
         response = client.models.generate_content(
