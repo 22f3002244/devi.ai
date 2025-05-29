@@ -69,10 +69,29 @@ body {
 .chat-message.bot {
     background-color: #f1f0f0;
     align-self: flex-start;
+    white-space: pre-wrap;
+    line-height: 1.2;
+    padding: 10px;
     border-top-right-radius: 15px;
     border-top-left-radius: 0px;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
+}
+
+.chat-message.bot ol,
+.chat-message.bot ul {
+  margin: 0.5em;
+  padding-left: 1em;
+  list-style-position: inside; /* this keeps the numbers inside the container */
+}
+.chat-message.bot li {
+  margin-bottom: 0.2em;
+  line-height: 1.2;
+}
+
+.chat-message.bot ol + p,
+.chat-message.bot ul + p {
+  margin-top: 0.5em;
 }
 
 .chat-form {
