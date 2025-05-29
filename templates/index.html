@@ -14,8 +14,8 @@
         </div>
         <div class="chat-box" id="chat-box">
             {% if response %}
-                <div class="chat-message user">{{ request.form.get('user_input') }}</div>
-                <div class="chat-message bot">{{ response }}</div>
+                <div class="chat-message user">{{ user_input }}</div>
+                <div class="chat-message bot">{{ response|safe }}</div>
             {% endif %}
         </div>
         <form method="POST" class="chat-form">
@@ -23,6 +23,13 @@
             <button type="submit">Send</button>
         </form>
     </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const chatBox = document.getElementById('chat-box');
+    chatBox.scrollTop = chatBox.scrollHeight;
+});
+
+</script>
     
 </body>
 </html>
